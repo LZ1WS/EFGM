@@ -1,8 +1,5 @@
 include("shared.lua")
 
-net.Receive( "NPCTRADER", function()
-	RunConsoleCommand( "shop_open" )
-end )
 local namecolor = Color(255,255,255,255)
 hook.Add("PostDrawOpaqueRenderables", "NPCTRADER", function()
 	for _, ent in pairs (ents.FindByClass("shop_npc")) do
