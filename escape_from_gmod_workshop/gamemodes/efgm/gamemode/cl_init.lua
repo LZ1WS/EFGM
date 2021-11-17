@@ -1,11 +1,10 @@
 include( "shared.lua" )
 include("core/spawnmenu_restrict/cl_spawnmenu.lua")
-include("modules/stamina/cl_bur_sprintmod.lua")
-include("core/economy/trader_ru/client.lua")
-include("core/economy/trader_eng/client.lua")
-include("core/economy/seller_ru/client.lua")
-include("core/economy/seller_eng/client.lua")
-include("core/base_system/base_upgrade_menu.lua")
+include("core/economy/trader_ru/cl_menu.lua")
+include("core/economy/trader_eng/cl_menu.lua")
+include("core/economy/seller_ru/cl_menu.lua")
+include("core/economy/seller_eng/cl_menu.lua")
+include("core/base_system/cl_base_upgrade_menu.lua")
 
 hook.Add( 'HUDDrawTargetID', 'HideDrawTarget', function() return false end )
 

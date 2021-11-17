@@ -15,6 +15,7 @@ end
 	util.AddNetworkString("Pricechange DOL")
 	util.AddNetworkString("client_ready")
 	util.AddNetworkString("price_data")
+
 net.Receive("Buy RUB", function(len, ply)
 local weaponname = net.ReadString()
 local price = net.ReadInt(32)
@@ -30,6 +31,24 @@ local price = net.ReadInt(32)
 	if tonumber(ply:GetDOL()) >= price then
 	ply:TakeDOL(price or 1000)
 ply:Give(weaponname)
+end
+end)
+
+net.Receive("Sell RUB", function(len, ply)
+local weaponname = net.ReadString()
+local price = net.ReadInt(32)
+	if ply:HasWeapon(weaponname) then
+	ply:AddRUB((price or 1000) / 6)
+ply:StripWeapon(weaponname)
+end
+end)
+
+net.Receive("Sell DOL", function(len, ply)
+local weaponname = net.ReadString()
+local price = net.ReadInt(32)
+	if ply:HasWeapon(weaponname) then
+	ply:AddDOL((price or 1000) / 6)
+ply:StripWeapon(weaponname)
 end
 end)
 
