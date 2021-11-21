@@ -13,6 +13,7 @@ include("core/evacuation/sh_evac.lua")
 include("core/menu/sh_menureplace.lua")
 include("core/chatcommands/sh_commands.lua")
 include("core/base_system/sh_metabase.lua")
+include("core/lang/sh_lang.lua")
 
 function GM:Initialize()
 end

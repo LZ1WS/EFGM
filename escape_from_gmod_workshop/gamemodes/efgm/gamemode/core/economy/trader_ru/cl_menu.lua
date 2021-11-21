@@ -1,7 +1,8 @@
+local GM = GM or GAMEMODE
 surface.CreateFont("Font", {font = "Arial",extended = false,size = 40,})
 surface.CreateFont("DButton", {font = "Arial",extended = false,size = 20,})
 surface.CreateFont("Text", {font = "Arial",extended = false,size = 20,})
-local buy = language.GetPhrase("efg.buy")
+local buy = GM.LANG:GetString("efg.buy")
 local faded_black = Color(0, 0, 0, 200)
 function OpenTraderShop()
 if IsValid(RUTRADERSCROLL) then return end
@@ -46,7 +47,7 @@ net.WriteInt(efgmpriceweapons[class]["DOL"] or 500, 32)
 net.SendToServer()
 end)
 
-local SubMenu = properties:AddSubMenu( "Купить патроны" )
+local SubMenu = properties:AddSubMenu( GM.LANG:GetString("efg.buyammo") )
 
 SubMenu:AddOption( math.ceil((efgmpriceweapons[class]["RUB"] or 1000) / 4) .. " RUB", function()
 net.Start("Buy RUB")

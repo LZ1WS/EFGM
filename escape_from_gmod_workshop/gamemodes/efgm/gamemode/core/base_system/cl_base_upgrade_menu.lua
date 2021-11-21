@@ -1,3 +1,4 @@
+local GM = GM or GAMEMODE
 surface.CreateFont( "Points", {
 	font = "Noto Sans", --  Use the font-name which is shown to you by your operating system Font Viewer, not the file name
 	extended = false,
@@ -45,7 +46,7 @@ DermaPanel.Paint = function( self, w, h )	-- Paint function w, h = how wide and 
 	-- Draws a rounded box with the color faded_black stored above.
 	draw.RoundedBox( 2, 0, 0, w, h, Base )
 	-- Draws text in the color white.
-	draw.SimpleText( language.GetPhrase("efg.base2"), "Header1", ScrW() / 2.15, ScrH() / 100 , color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
+	draw.SimpleText( GM.LANG:GetString("efg.base"), "Header1", ScrW() / 2.15, ScrH() / 100 , color_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP )
 	end
 	local DLabel = vgui.Create( "DLabel", DermaPanel )
 	--[[net.Start("Get_Points")
@@ -53,7 +54,7 @@ DermaPanel.Paint = function( self, w, h )	-- Paint function w, h = how wide and 
 	net.Receive("Receive_Points", function()]]--
 local Points = LocalPlayer():GetPoints() --net.ReadInt()
 DLabel:SetPos( ScrW() / 2.55, ScrH() / 20 )
-	DLabel:SetText( Points .. language.GetPhrase("efg.upgradepoints") )
+	DLabel:SetText( Points .. GM.LANG:GetString("efg.upgradepoints") )
 	DLabel:SetFont("Points")
 	DLabel:SetColor(color_white)
 	DLabel:SizeToContents()
@@ -61,10 +62,10 @@ surface.CreateFont("ButtonFont2", {font = "Arial",size = 35, weight = 5, outline
 local DermaButton = vgui.Create( "DButton", DermaPanel )
 DermaButton:SetFontInternal("ButtonFont2")
 	if LocalPlayer():GetUpgrade("Bitcoin LVL II") == "true" or LocalPlayer():GetUpgrade("Bitcoin LVL I") == "true" then
-DermaButton:SetText( language.GetPhrase("efg.bitcoinupg") )
+DermaButton:SetText( GM.LANG:GetString("efg.bitcoinupg") )
 else
 	if LocalPlayer():GetUpgrade("Bitcoin LVL I") == "false" then
-DermaButton:SetText( language.GetPhrase("efg.bitcoinbuy") )
+DermaButton:SetText( GM.LANG:GetString("efg.bitcoinbuy") )
 else
 if LocalPlayer():GetUpgrade("Bitcoin LVL III") == "true" then
 DermaButton:Hide()
@@ -81,25 +82,25 @@ if LocalPlayer():GetPoints() >= 1000 and LocalPlayer():GetUpgrade("Bitcoin LVL I
 LocalPlayer():GetUpgrade("Bitcoin LVL II") == "true" and not LocalPlayer():GetUpgrade("Bitcoin LVL III") == "true" then
 	net.Start("Buy Bitcoin LVL I")
 	net.SendToServer()
-	notification.AddLegacy(language.GetPhrase("efg.bitcoinI"), 0, 4)
+	notification.AddLegacy(GM.LANG:GetString("efg.bitcoinI"), 0, 4)
 	surface.PlaySound( "garrysmod/ui_click.wav" )
 	DermaPanel:Hide()
 else
 	if LocalPlayer():GetPoints() >= 5000 and LocalPlayer():GetUpgrade("Bitcoin LVL I") == "true" then
 	net.Start("Buy Bitcoin LVL II")
 	net.SendToServer()
-	notification.AddLegacy(language.GetPhrase("efg.bitcoinII"), 0, 4)
+	notification.AddLegacy(GM.LANG:GetString("efg.bitcoinII"), 0, 4)
 	surface.PlaySound( "garrysmod/ui_click.wav" )
 	DermaPanel:Hide()
 else
 	if LocalPlayer():GetPoints() >= 10000 and LocalPlayer():GetUpgrade("Bitcoin LVL II") == "true" then
 	net.Start("Buy Bitcoin LVL III")
 	net.SendToServer()
-	notification.AddLegacy(language.GetPhrase("efg.bitcoinIII"), 0, 4)
+	notification.AddLegacy(GM.LANG:GetString("efg.bitcoinIII"), 0, 4)
 	surface.PlaySound( "garrysmod/ui_click.wav" )
 	DermaPanel:Hide()
 else
-	notification.AddLegacy(language.GetPhrase("efg.nopoints"), 1, 4)
+	notification.AddLegacy(GM.LANG:GetString("efg.nopoints"), 1, 4)
 	surface.PlaySound( "buttons/button10.wav" )
 end
 end
@@ -134,33 +135,4 @@ end)
 
 net.Receive("Base Menu Close", function(len, ply)
 
-end)
-
-local delay = 0
-local delaybitcoin = 0
-
-hook.Add("Think", "PointAddTimer", function()
-	if CurTime() < delay then return end
-	net.Start("Add_Points")
-	net.SendToServer()
-	delay = CurTime() + 60
-	notification.AddLegacy(language.GetPhrase("efg.tick"), 0, 4)
-	surface.PlaySound( "garrysmod/content_downloaded.wav" )
-	if LocalPlayer():GetUpgrade("Bitcoin LVL I") == "true" or LocalPlayer():GetUpgrade("Bitcoin LVL II") == "true"
-	or LocalPlayer():GetUpgrade("Bitcoin LVL III") == "true" then
-	if CurTime() < delaybitcoin then return end
-	delaybitcoin = CurTime() + 60
-	if LocalPlayer():GetUpgrade("Bitcoin LVL I") == "true" then
-	notification.AddLegacy(language.GetPhrase("efg.bitI"), 0, 4)
-else
-	if LocalPlayer():GetUpgrade("Bitcoin LVL II") == "true" then
-	notification.AddLegacy(language.GetPhrase("efg.bitII"), 0, 4)
-else
-	if LocalPlayer():GetUpgrade("Bitcoin LVL III") == "true" then
-	notification.AddLegacy(language.GetPhrase("efg.bitIII"), 0, 4)
-end end end
-	surface.PlaySound( "garrysmod/content_downloaded.wav" )
-	net.Start("Bit_Miner")
-	net.SendToServer()
-	end
 end)

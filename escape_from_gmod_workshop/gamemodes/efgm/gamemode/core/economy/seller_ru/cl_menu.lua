@@ -1,7 +1,8 @@
+local GM = GM or GAMEMODE
 surface.CreateFont("Font", {font = "Arial",extended = false,size = 40,}) -- Then font named 'Font' compacted on one line
 surface.CreateFont("DButton", {font = "Arial",extended = false,size = 20,}) -- Then font named 'Font' compacted on one line
 surface.CreateFont("Text", {font = "Arial",extended = false,size = 20,}) -- Then font named 'Font' compacted on one line
-local buy = language.GetPhrase("efg.sell")
+local buy = GM.LANG:GetString("efg.sell")
 local faded_black = Color(0, 0, 0, 200)		-- The color black but with 200 Alpha
 function OpenSellerShop()
 if IsValid(RUSELLERSCROLL) then return end
