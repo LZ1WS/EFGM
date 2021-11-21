@@ -110,6 +110,131 @@ LocalPlayer():StopSound( "menu_theme.wav" )
 timer.Remove("loopmenu")
 end
 DermaButton4:MakePopup()
+
+if LocalPlayer():IsSuperAdmin() then
+local DermaButton5 = vgui.Create( "DButton", image )
+DermaButton5:SetFontInternal("ButtonFont")
+DermaButton5:SetText( language.GetPhrase("efg.config") )
+DermaButton5:SetPos( ScrW() / 1.1, ScrH() / 1.04 )
+DermaButton5:SizeToContents()
+function DermaButton5:Paint( w, h )
+DermaButton5:SetTextColor(color_white)
+end
+DermaButton5.DoClick = function()
+if IsValid(TRADECONFIGMENU) then return end
+TRADECONFIGMENU = vgui.Create("DFrame", image)
+
+local AddButton = vgui.Create( "DButton", TRADECONFIGMENU )
+AddButton:SetFont("ChatFont")
+AddButton:SetText("Add Weapon")
+AddButton:SizeToContents()
+AddButton:AlignLeft(0)
+AddButton:SetMouseInputEnabled(true)
+
+TRADECONFIGSCROLL = vgui.Create("DScrollPanel", TRADECONFIGMENU)
+TRADECONFIGSCROLL:Dock( FILL )
+local List = TRADECONFIGSCROLL:Add( "DIconLayout" )
+List:Dock( FILL )
+List:SetSpaceY( 5 )
+List:SetSpaceX( 5 )
+
+AddButton.DoClick = function()
+
+local TextEntry = vgui.Create( "DTextEntry", TRADECONFIGMENU)
+	TextEntry:Center()
+	TextEntry:SetPlaceholderText( "Type cancel to cancel the adding process" )
+	TextEntry:MakePopup()
+	TextEntry:SetSize(200, 50)
+	TextEntry.OnEnter = function( self )
+if string.lower(self:GetValue()) == "cancel" then
+	self:Hide()
+end
+if (weapons.Get(tostring(self:GetValue()))) then
+net.Start("weapon_adding")
+net.WriteString(string.lower(self:GetValue()))
+net.SendToServer()
+	self:Hide()
+end
+end
+
+end
+
+for _, v in pairs(weapons.GetList()) do
+if !(efgmpriceweapons[v.ClassName]) then continue end
+local icon = List:Add( "SpawnIcon" )
+icon:SetModel( v.WorldModel or "models/props_junk/watermelon01.mdl" )
+icon:SetSize(220, 220)
+
+local weaponname = icon:Add( "DLabel" )
+weaponname:SetText(v.PrintName)
+weaponname:SetFont("ChatFont")
+weaponname:Dock(TOP)
+weaponname:SizeToContents()
+
+local ConfigButton = vgui.Create( "DButton", icon )
+ConfigButton:SetFont("ChatFont")
+ConfigButton:SetText("configtest")
+ConfigButton:SizeToContents()
+ConfigButton:Dock(BOTTOM)
+ConfigButton:SetMouseInputEnabled(true)
+ConfigButton.DoClick = function()
+
+local properties = TRADECONFIGMENU:Add("DMenu")
+properties:SetPos(TRADECONFIGMENU:CursorPos())
+
+local pricerub = properties:AddOption( "Установить цену в рублях", function()
+	local TextEntry = vgui.Create( "DTextEntry", pricerub)
+	TextEntry:Center()
+	TextEntry:SetPlaceholderText( "Введите Цену" )
+	TextEntry:MakePopup()
+	TextEntry:SetSize(100, 50)
+	TextEntry.OnEnter = function( self )
+	self:Hide()
+if isnumber(tonumber(self:GetValue())) then
+	net.Start("Pricechange RUB")
+	net.WriteString(class)
+	net.WriteInt(self:GetValue(), 32)
+	net.SendToServer()
+end
+end
+end)
+
+local pricedol = properties:AddOption( "Установить цену в долларах", function()
+	local TextEntry = vgui.Create( "DTextEntry", pricedol)
+	TextEntry:Center()
+	TextEntry:SetPlaceholderText( "Введите Цену" )
+	TextEntry:MakePopup()
+	TextEntry:SetSize(100, 50)
+	TextEntry.OnEnter = function( self )
+	self:Hide()
+if isnumber(tonumber(self:GetValue())) then
+	net.Start("Pricechange DOL")
+	net.WriteString(class)
+	net.WriteInt(self:GetValue(), 32)
+	net.SendToServer()
+end
+end
+end)
+end
+
+end
+TRADECONFIGMENU:SetSize(ScrW() * 0.942, ScrH() * 0.97)
+TRADECONFIGMENU:Center()
+TRADECONFIGMENU:SetTitle("")
+TRADECONFIGMENU:SetDraggable(false)
+TRADECONFIGMENU:MakePopup()
+TRADECONFIGMENU.Paint = function(self, w, h)
+	draw.RoundedBox(2, 0, 0, w, h, Color(0, 0, 0, 200))
+end
+TRADECONFIGMENU:SetAutoDelete(true)
+
+TRADECONFIGMENU:ShowCloseButton(true)
+end
+
+DermaButton5:MakePopup()
+
+end
+
 gui.HideGameUI()
 
 end

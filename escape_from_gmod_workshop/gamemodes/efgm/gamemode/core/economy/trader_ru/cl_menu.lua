@@ -1,11 +1,11 @@
-surface.CreateFont("Font", {font = "Arial",extended = false,size = 40,}) -- Then font named 'Font' compacted on one line
-surface.CreateFont("DButton", {font = "Arial",extended = false,size = 20,}) -- Then font named 'Font' compacted on one line
-surface.CreateFont("Text", {font = "Arial",extended = false,size = 20,}) -- Then font named 'Font' compacted on one line
+surface.CreateFont("Font", {font = "Arial",extended = false,size = 40,})
+surface.CreateFont("DButton", {font = "Arial",extended = false,size = 20,})
+surface.CreateFont("Text", {font = "Arial",extended = false,size = 20,})
 local buy = language.GetPhrase("efg.buy")
-local faded_black = Color(0, 0, 0, 200)		-- The color black but with 200 Alpha
+local faded_black = Color(0, 0, 0, 200)
 function OpenTraderShop()
 if IsValid(RUTRADERSCROLL) then return end
-local DermaPanel = vgui.Create("DFrame")	-- The name DermaPanel to store the value DFrame
+local DermaPanel = vgui.Create("DFrame")
 RUTRADERSCROLL = vgui.Create("DScrollPanel", DermaPanel)
 RUTRADERSCROLL:Dock( FILL )
 
@@ -15,8 +15,7 @@ List:SetSpaceY( 5 )
 List:SetSpaceX( 5 )
 
 for _, v in pairs(weapons.GetList()) do
-local class = v.ClassName
-if class:find("cw_") and not class:find("base") then
+if !(efgmpriceweapons[v.ClassName]) then continue end
 
 local icon = List:Add( "SpawnIcon" )
 icon:SetModel( v.WorldModel or "models/props_junk/watermelon01.mdl" )
@@ -63,61 +62,20 @@ net.WriteInt(math.ceil((efgmpriceweapons[class]["DOL"] or 500) / 4), 32)
 net.SendToServer()
 end)
 
-end
-DermaButton.DoRightClick = function()
-if LocalPlayer():IsSuperAdmin() == false then return end
-local properties = DermaPanel:Add("DMenu")
-properties:SetPos(DermaPanel:CursorPos())
-
-local pricerub = properties:AddOption( "Установить цену в рублях", function()
-	local TextEntry = vgui.Create( "DTextEntry", pricerub)
-	TextEntry:Center()
-	TextEntry:SetPlaceholderText( "Введите Цену" )
-	TextEntry:MakePopup()
-	TextEntry:SetSize(100, 50)
-	TextEntry.OnEnter = function( self )
-	self:Hide()
-if isnumber(tonumber(self:GetValue())) then
-	net.Start("Pricechange RUB")
-	net.WriteString(class)
-	net.WriteInt(self:GetValue(), 32)
-	net.SendToServer()
-end
-end
-end)
-
-local pricedol = properties:AddOption( "Установить цену в долларах", function()
-	local TextEntry = vgui.Create( "DTextEntry", pricedol)
-	TextEntry:Center()
-	TextEntry:SetPlaceholderText( "Введите Цену" )
-	TextEntry:MakePopup()
-	TextEntry:SetSize(100, 50)
-	TextEntry.OnEnter = function( self )
-	self:Hide()
-if isnumber(tonumber(self:GetValue())) then
-	net.Start("Pricechange DOL")
-	net.WriteString(class)
-	net.WriteInt(self:GetValue(), 32)
-	net.SendToServer()
-end
-end
-end)
-
-end
 
 end
 end
 
-DermaPanel:SetSize(ScrW() * 0.97, ScrH() * 0.97) // Sets the size to 500x by 300y
-DermaPanel:Center()							// Centers the panel
-DermaPanel:SetTitle("")						// Set the title to nothing
-DermaPanel:SetDraggable(false)				// Makes it so you carnt drag it
-DermaPanel:MakePopup()						// Makes it so you can move your mouse on it
-DermaPanel.Paint = function(self, w, h)		// Paint function w, h = how wide and tall it is
-	draw.RoundedBox(2, 0, 0, w, h, faded_black)	// Draws a rounded box with the color faded_black stored abouve
-end
-end
 
+DermaPanel:SetSize(ScrW() * 0.942, ScrH() * 0.97)
+DermaPanel:Center()
+DermaPanel:SetTitle("")
+DermaPanel:SetDraggable(false)
+DermaPanel:MakePopup()
+DermaPanel.Paint = function(self, w, h)
+	draw.RoundedBox(2, 0, 0, w, h, faded_black)
+end
+end
 net.Receive("price_data", function()
 efgmpriceweapons = net.ReadTable()
 end)
