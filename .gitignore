@@ -1,6 +1,5 @@
-
-*.png
 *.json
+*.png
 *.jpg
 *.wav
 *.txt
