@@ -54,10 +54,8 @@ end
 util.AddNetworkString("Buy Bitcoin LVL I")
 util.AddNetworkString("Buy Bitcoin LVL II")
 util.AddNetworkString("Buy Bitcoin LVL III")
-util.AddNetworkString("Add_Points")
 util.AddNetworkString("Get_Points")
 util.AddNetworkString("Receive_Points")
-util.AddNetworkString("Bit_Miner")
 util.AddNetworkString("Get_Upgrade")
 util.AddNetworkString("Return_Upgrade")
 
@@ -78,10 +76,6 @@ ply:UnlockUpgrade("Bitcoin LVL III")
 ply:TakePoints(10000)
 end)
 
-net.Receive("Add_Points", function(len, ply)
-ply:AddPoints(10)
-end)
-
 --[[net.Receive("Get_Points", function(len, ply)
 local points = ply:GetPoints()
 net.Start("Receive_Points")
@@ -94,21 +88,6 @@ local hasupgrade = ply:GetUpgrade("Bitcoin LVL I")
 net.Start("Return_Upgrade")
 net.WriteString(hasupgrade)
 net.Send(ply)
-end)
-
-net.Receive("Bit_Miner", function(len, ply)
-if ply:GetUpgrade("Bitcoin LVL I") == true then
-	ply:AddRUB(10)
-	ply:AddDOL(5)
-else
-if ply:GetUpgrade("Bitcoin LVL II") == true then
-	ply:AddRUB(50)
-	ply:AddDOL(25)
-else
-if ply:GetUpgrade("Bitcoin LVL III") == true then
-	ply:AddRUB(100)
-	ply:AddDOL(50)
-end end end
 end)
 
 end

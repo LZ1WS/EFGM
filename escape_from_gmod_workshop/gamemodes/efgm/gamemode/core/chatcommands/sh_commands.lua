@@ -1,3 +1,4 @@
+local GM = GM or GAMEMODE
 if SERVER then
 
 local blacklist = {"weapon_physcannon", "weapon_physgun", "gmod_tool", "gmod_camera",
@@ -22,7 +23,7 @@ if text == "/drop" then
 
 
 if table.HasValue(blacklist,ply:GetActiveWeapon():GetClass()) then
-ply:SendLua([[notification.AddLegacy((language.GetPhrase("efg.drop")),1,2)]]) return "" end
+ply:SendLua([[notification.AddLegacy((GM.LANG:GetString("efg.drop")),1,2)]]) return "" end
 ply:ConCommand("+drop")
 return ""
 end

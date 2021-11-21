@@ -1,3 +1,4 @@
+local GM = GM or GAMEMODE
 CreateClientConVar("cl_bur_sprintmod_enablehud",1,true,false)
 CreateClientConVar("cl_bur_sprintmod_fade",1,true,false)
 
@@ -217,7 +218,7 @@ function DrawBurStamina()
 		surface.SetMaterial( Mat )
 		surface.SetDrawColor(0,255,0,BaseFade * BasePercent)
 		surface.DrawTexturedRectRotated(XPos,YPos,XSize*0.9*Percent,YSize*0.5,0)
-local energy = language.GetPhrase("efg.energy")
+local energy = GM.LANG:GetString("efg.energy")
 		draw.DrawText(energy,"SprintFont",XPos,YPos - BarHeight/2,Color(255,255,255,255*Percent*BasePercent),TEXT_ALIGN_CENTER)
 			
 	end

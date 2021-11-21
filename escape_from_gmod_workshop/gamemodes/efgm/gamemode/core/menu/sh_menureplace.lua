@@ -1,3 +1,4 @@
+local GM = GM or GAMEMODE
 if CLIENT then
 surface.CreateFont("ButtonFont", {font = "Arial",size = 40, weight = 700, outline = false,}) -- Then font named 'Font' compacted on one line
 imageison = false
@@ -28,9 +29,9 @@ end)
 
 local DermaButton = vgui.Create( "DButton", image )
 DermaButton:SetFontInternal("ButtonFont")
-DermaButton:SetText( language.GetPhrase("efg.continue") )
-DermaButton:SetPos( ScrW() / 2.3, ScrH() / 2 )
-DermaButton:SetSize( 250, 30 )
+DermaButton:SetText( GM.LANG:GetString("efg.continue") )
+DermaButton:SetPos( ScrW() / 2.27, ScrH() / 2 )
+DermaButton:SizeToContents()
 function DermaButton:Paint( w, h )
 DermaButton:SetTextColor(color_white)
 end
@@ -44,7 +45,7 @@ DermaButton:MakePopup()
 
 local DermaButton2 = vgui.Create( "DButton", image )
 DermaButton2:SetFontInternal("ButtonFont")
-DermaButton2:SetText( language.GetPhrase("efg.quit") )
+DermaButton2:SetText( GM.LANG:GetString("efg.quit") )
 DermaButton2:SetPos( ScrW() / 2.3, ScrH() / 1.4 )
 DermaButton2:SetSize( 250, 30 )
 function DermaButton2:Paint( w, h )
@@ -57,7 +58,7 @@ DermaButton2:MakePopup()
 
 local DermaButton3 = vgui.Create( "DButton", image )
 DermaButton3:SetFontInternal("ButtonFont")
-DermaButton3:SetText( language.GetPhrase("efg.base") )
+DermaButton3:SetText( GM.LANG:GetString("efg.base") )
 DermaButton3:SetPos( ScrW() / 2.3, ScrH() / 1.74 )
 DermaButton3:SetSize( 250, 30 )
 function DermaButton3:Paint( w, h )
@@ -65,7 +66,7 @@ function DermaButton3:Paint( w, h )
 end
 DermaButton3.DoClick = function()
 if LocalPlayer():GetPos():WithinAABox(exit1start, exit1end) == true or LocalPlayer():GetPos():WithinAABox(exit2start, exit2end) == true then
-LocalPlayer():ChatPrint(language.GetPhrase( "efg.teleportbase" ))
+LocalPlayer():ChatPrint(GM.LANG:GetString( "efg.teleportbase" ))
 timer.Create("Before TP", 5, 1, function()
 net.Start("TeleportToBase")
 net.SendToServer()
@@ -77,7 +78,7 @@ end)
 end)
 end
 if LocalPlayer():GetPos():WithinAABox(Vector(-237.646713, 936.257446, 12009.003906), Vector(428.530396, 2229.283203, 14529.247070)) == true then
-LocalPlayer():ChatPrint(language.GetPhrase( "efg.teleportworld" ))
+LocalPlayer():ChatPrint(GM.LANG:GetString( "efg.teleportworld" ))
 timer.Create("Before TP", 5, 1, function()
 net.Start("TeleportToWorld")
 net.SendToServer()
@@ -95,7 +96,7 @@ DermaButton3:MakePopup()
 
 local DermaButton4 = vgui.Create( "DButton", image )
 DermaButton4:SetFontInternal("ButtonFont")
-DermaButton4:SetText( language.GetPhrase("efg.f4") )
+DermaButton4:SetText( GM.LANG:GetString("efg.f4") )
 DermaButton4:SetPos( ScrW() / 2.3, ScrH() / 1.55 )
 DermaButton4:SetSize( 250, 30 )
 function DermaButton4:Paint( w, h )
@@ -110,6 +111,131 @@ LocalPlayer():StopSound( "menu_theme.wav" )
 timer.Remove("loopmenu")
 end
 DermaButton4:MakePopup()
+
+if LocalPlayer():IsSuperAdmin() then
+local DermaButton5 = vgui.Create( "DButton", image )
+DermaButton5:SetFontInternal("ButtonFont")
+DermaButton5:SetText( GM.LANG:GetString("efg.config") )
+DermaButton5:SetPos( ScrW() / 1.08, ScrH() / 1.04 )
+DermaButton5:SizeToContents()
+function DermaButton5:Paint( w, h )
+DermaButton5:SetTextColor(color_white)
+end
+DermaButton5.DoClick = function()
+if IsValid(TRADECONFIGMENU) then return end
+TRADECONFIGMENU = vgui.Create("DFrame", image)
+
+local AddButton = vgui.Create( "DButton", TRADECONFIGMENU )
+AddButton:SetFont("ChatFont")
+AddButton:SetText(GM.LANG:GetString("efg.weaponadd"))
+AddButton:SizeToContents()
+AddButton:AlignLeft(0)
+AddButton:SetMouseInputEnabled(true)
+
+TRADECONFIGSCROLL = vgui.Create("DScrollPanel", TRADECONFIGMENU)
+TRADECONFIGSCROLL:Dock( FILL )
+local List = TRADECONFIGSCROLL:Add( "DIconLayout" )
+List:Dock( FILL )
+List:SetSpaceY( 5 )
+List:SetSpaceX( 5 )
+
+AddButton.DoClick = function()
+
+local TextEntry = vgui.Create( "DTextEntry", TRADECONFIGMENU)
+	TextEntry:Center()
+	TextEntry:SetPlaceholderText(GM.LANG:GetString("efg.cancel"))
+	TextEntry:MakePopup()
+	TextEntry:SetSize(200, 50)
+	TextEntry.OnEnter = function( self )
+if string.lower(self:GetValue()) == "cancel" then
+	self:Hide()
+end
+if (weapons.Get(tostring(self:GetValue()))) then
+net.Start("weapon_adding")
+net.WriteString(string.lower(self:GetValue()))
+net.SendToServer()
+	self:Hide()
+end
+end
+
+end
+
+for _, v in pairs(weapons.GetList()) do
+if !(efgmpriceweapons[v.ClassName]) then continue end
+local icon = List:Add( "SpawnIcon" )
+icon:SetModel( v.WorldModel or "models/props_junk/watermelon01.mdl" )
+icon:SetSize(220, 220)
+
+local weaponname = icon:Add( "DLabel" )
+weaponname:SetText(v.PrintName)
+weaponname:SetFont("ChatFont")
+weaponname:Dock(TOP)
+weaponname:SizeToContents()
+
+local ConfigButton = vgui.Create( "DButton", icon )
+ConfigButton:SetFont("ChatFont")
+ConfigButton:SetText(GM.LANG:GetString("efg.configweapon"))
+ConfigButton:SizeToContents()
+ConfigButton:Dock(BOTTOM)
+ConfigButton:SetMouseInputEnabled(true)
+ConfigButton.DoClick = function()
+
+local properties = TRADECONFIGMENU:Add("DMenu")
+properties:SetPos(TRADECONFIGMENU:CursorPos())
+
+local pricerub = properties:AddOption( GM.LANG:GetString("efg.changepricerub"), function()
+	local TextEntry = vgui.Create( "DTextEntry", pricerub)
+	TextEntry:Center()
+	TextEntry:SetPlaceholderText( GM.LANG:GetString("efg.insertprice") )
+	TextEntry:MakePopup()
+	TextEntry:SetSize(100, 50)
+	TextEntry.OnEnter = function( self )
+	self:Hide()
+if isnumber(tonumber(self:GetValue())) then
+	net.Start("Pricechange RUB")
+	net.WriteString(class)
+	net.WriteInt(self:GetValue(), 32)
+	net.SendToServer()
+end
+end
+end)
+
+local pricedol = properties:AddOption( GM.LANG:GetString("efg.changepricedol"), function()
+	local TextEntry = vgui.Create( "DTextEntry", pricedol)
+	TextEntry:Center()
+	TextEntry:SetPlaceholderText( GM.LANG:GetString("efg.insertprice") )
+	TextEntry:MakePopup()
+	TextEntry:SetSize(100, 50)
+	TextEntry.OnEnter = function( self )
+	self:Hide()
+if isnumber(tonumber(self:GetValue())) then
+	net.Start("Pricechange DOL")
+	net.WriteString(class)
+	net.WriteInt(self:GetValue(), 32)
+	net.SendToServer()
+end
+end
+end)
+end
+
+end
+TRADECONFIGMENU:SetSize(ScrW() * 0.942, ScrH() * 0.97)
+TRADECONFIGMENU:Center()
+TRADECONFIGMENU:SetTitle("")
+TRADECONFIGMENU:SetDraggable(false)
+TRADECONFIGMENU:MakePopup()
+TRADECONFIGMENU.Paint = function(self, w, h)
+	draw.RoundedBox(2, 0, 0, w, h, Color(0, 0, 0, 200))
+end
+TRADECONFIGMENU:SetAutoDelete(true)
+
+TRADECONFIGMENU:ShowCloseButton(true)
+end
+
+DermaButton5:MakePopup()
+
+end
+
 gui.HideGameUI()
 
 end
@@ -135,7 +261,7 @@ end)
 
 local DermaButton = vgui.Create( "DButton", imageraid )
 DermaButton:SetFontInternal("ButtonFont2")
-DermaButton:SetText( language.GetPhrase("efg.Raid") )
+DermaButton:SetText( GM.LANG:GetString("efg.Raid") )
 DermaButton:SetPos( ScrW() / 2.09, ScrH() / 2 )
 DermaButton:SizeToContents()
 function DermaButton:Paint( w, h )
@@ -152,7 +278,7 @@ DermaButton:MakePopup()
 
 local DermaButton2 = vgui.Create( "DButton", imageraid )
 DermaButton2:SetFontInternal("ButtonFont2")
-DermaButton2:SetText( language.GetPhrase("efg.FreeMode") )
+DermaButton2:SetText( GM.LANG:GetString("efg.FreeMode") )
 DermaButton2:SetPos( ScrW() / 2.45, ScrH() / 1.74 )
 DermaButton2:SizeToContents()
 function DermaButton2:Paint( w, h )

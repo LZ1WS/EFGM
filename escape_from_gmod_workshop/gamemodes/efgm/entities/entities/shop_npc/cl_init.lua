@@ -1,3 +1,4 @@
+local GM = GM or GAMEMODE
 include("shared.lua")
 
 local namecolor = Color(255,255,255,255)
@@ -10,7 +11,7 @@ hook.Add("PostDrawOpaqueRenderables", "NPCTRADER", function()
 			Ang:RotateAroundAxis( Ang:Right(), -90)
 
 			cam.Start3D2D(ent:GetPos() + ent:GetUp() * 76, Ang, 0.10)
-				draw.SimpleTextOutlined( language.GetPhrase("efg.traderru"), "trader_name", -8, 0, namecolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 0, Color(255,255,255,255) )
+				draw.SimpleTextOutlined( GM.LANG:GetString("efg.traderru"), "trader_name", -8, 0, namecolor, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER, 0, Color(255,255,255,255) )
 			cam.End3D2D()
 		end
 	end

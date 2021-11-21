@@ -1,16 +1,15 @@
 if SERVER then
+local GM = GM or GAMEMODE
 CreateConVar("efg_whitelist", 1, 1288192, "Enable fractions whitelist, 0 = false, 1 = true", 0, 1)
 -- ^ Suggested by treven#4702 ^
 end
 if CLIENT then
+local GM = GM or GAMEMODE
 CreateClientConVar("efg_whitelist", 1, false, false, "Enable fractions whitelist, 0 = false, 1 = true", 0, 1)
 local WhiteListUSEC = {"USEC"}
 local WhiteListBEAR = {"BEAR"}
 local WhiteListUSECID = {""}
 local WhiteListBEARID = {""}
-local teamtitle = language.GetPhrase("efg.teamtitle")
-local saveger = language.GetPhrase("efg.saveger")
-local administration = language.GetPhrase("efg.admin")
 
 surface.CreateFont("help", {
 font = "Default",
@@ -34,7 +33,7 @@ net.Receive("Open TM", function()
 local TeamMenu = vgui.Create("DFrame")
 TeamMenu:SetSize(900, 450)
 TeamMenu:SetPos(ScrW() / 2 - 450, ScrH() / 2 - 250)
-TeamMenu:SetTitle(teamtitle)
+TeamMenu:SetTitle(GM.LANG:GetString("efg.teamtitle"))
 TeamMenu:ShowCloseButton(true)
 TeamMenu:MakePopup()
 
@@ -60,7 +59,7 @@ or not table.HasValue(WhiteListUSECID, LocalPlayer():SteamID()) and not table.Ha
 	dPanelButton1:SetText( '' )
 	dPanelButton1.Paint = function( self, w, h )
 		draw.RoundedBox( 15, 0, 0, w, h, Color( 50, 50, 50, 200 ) )
-		draw.SimpleText( saveger, "help", w / 2,  h / 2.0, Color( 255, 200, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( GM.LANG:GetString("efg.saveger"), "help", w / 2,  h / 2.0, Color( 255, 200, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	end
 
 	dPanelButton1.DoClick = function() 
@@ -77,7 +76,7 @@ local dPanelButton1 = vgui.Create( "DButton", TeamMenu)
 	dPanelButton1:SetText( '' )
 	dPanelButton1.Paint = function( self, w, h )
 		draw.RoundedBox( 15, 0, 0, w, h, Color( 50, 50, 50, 200 ) )
-		draw.SimpleText( administration, "help", w / 2,  h / 2.0, Color( 255, 200, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( GM.LANG:GetString("efg.admin"), "help", w / 2,  h / 2.0, Color( 255, 200, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	end
 
 	dPanelButton1.DoClick = function() 

@@ -1,9 +1,5 @@
 include("shared.lua")
 
-net.Receive( "NPCTRADERENG", function()
-	RunConsoleCommand( "shop_open_eng" )
-end )
-
 hook.Add("PostDrawOpaqueRenderables", "NPCTRADERENG", function()
 	for _, ent in pairs (ents.FindByClass("shop_npc_eng")) do
 		if ent:GetPos():Distance(LocalPlayer():GetPos()) < 500 then
